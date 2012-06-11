@@ -1,4 +1,4 @@
-#!/opt/bin/python
+#!/usr/bin/python
 """ PYGAL Python Gallery Generator """
 
 import os
@@ -54,9 +54,11 @@ def get_exif(fn):
 
 
 if __name__ == "__main__":
+	home_dir="/home/karim/Bureau/Karim/photos/"
+	app_dir="simple-python-gallery"
 	default='UNKNOWN'
-	logging.basicConfig(filename='/home/kayari/MesFichiers/MesPhotos/pygal/pygal.log',level=logging.DEBUG)
-	filelist=dirwalk("/home/kayari/MesFichiers/MesPhotos/")
+	logging.basicConfig(filename=home_dir + app_dir + '/pygal.log',level=logging.DEBUG)
+	filelist=dirwalk(home_dir)
 	for file in filelist:
 		exif = get_exif(file)
 		print ("%s : %s : %s" % (file, exif.get('Model'), exif.get('DateTimeOriginal',default)))
