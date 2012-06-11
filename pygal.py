@@ -37,7 +37,7 @@ def get_exif(fn):
 	from PIL import Image
 	from PIL.ExifTags import TAGS
 	ret = {}
-	logging.info('Open file : %s' % fn)
+	#logging.info('Open file : %s' % fn)
 	try:
 		i = Image.open(fn)
 		info = i._getexif()
@@ -45,20 +45,24 @@ def get_exif(fn):
      			decoded = TAGS.get(tag, tag)
 			ret[decoded] = value
 	except:
-		#ret['Model']="UNKNOWN"
-		#ret['DateTimeOriginal']="UNKNOWN"
 		logging.warning('Exif Error : %s'  % fn)
 	
-	logging.info('Closing file : %s' % fn)
+	#logging.info('Closing file : %s' % fn)
 	return ret	
+
+def db_init(dbfile):
+	conn = sqlite3.connect(dbfile)
+	c = conn.cursor()
+	c.execute('''CREATE TABLE photos (path text, sha1 text, date text, tags text)''')
 
 
 if __name__ == "__main__":
 	home_dir="/home/karim/Bureau/Karim/photos/"
 	app_dir="simple-python-gallery"
-	default='UNKNOWN'
+	#db_init(home_dir+app_dir+"/spg.db")
+
 	logging.basicConfig(filename=home_dir + app_dir + '/pygal.log',level=logging.DEBUG)
 	filelist=dirwalk(home_dir)
 	for file in filelist:
 		exif = get_exif(file)
-		print ("%s : %s : %s" % (file, exif.get('Model'), exif.get('DateTimeOriginal',default)))
+		print ("%s : %s : %s, %s" % (file, sha1file(file),exif.get('Model','none').strip(), exif.get('DateTimeOriginal','none').strip()))
